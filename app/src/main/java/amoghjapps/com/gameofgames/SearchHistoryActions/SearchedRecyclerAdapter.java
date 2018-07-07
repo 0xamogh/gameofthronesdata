@@ -1,4 +1,4 @@
-package amoghjapps.com.gameofgames.RecyclerView;
+package amoghjapps.com.gameofgames.SearchHistoryActions;
 
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -11,15 +11,10 @@ import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
-import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
-import amoghjapps.com.gameofgames.Adapter.urlManager;
 import amoghjapps.com.gameofgames.R;
-import amoghjapps.com.gameofgames.SearchedItemModel;
 
 public class SearchedRecyclerAdapter extends RecyclerView.Adapter<SearchedRecyclerAdapter.SearchedMyViewHolder> {
 

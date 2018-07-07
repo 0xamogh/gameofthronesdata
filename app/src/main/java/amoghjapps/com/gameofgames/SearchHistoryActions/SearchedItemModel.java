@@ -1,4 +1,4 @@
-package amoghjapps.com.gameofgames;
+package amoghjapps.com.gameofgames.SearchHistoryActions;
 
 public class SearchedItemModel {
     String namestring;
