@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import amoghjapps.com.gameofgames.R;
@@ -28,6 +29,13 @@ public class SearchedRecyclerAdapter extends RecyclerView.Adapter<SearchedRecycl
             super(v);
             name=v.findViewById(R.id.gmailitem_title);
             image=v.findViewById(R.id.gmailitem_letter);
+
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
 
         }
     }
@@ -61,5 +69,9 @@ public class SearchedRecyclerAdapter extends RecyclerView.Adapter<SearchedRecycl
     @Override
     public int getItemCount() {
         return listattributes.size();
+    }
+    public void filterList(ArrayList<SearchedItemModel> filteredList) {
+        SearchedCharacters.array = filteredList;
+        notifyDataSetChanged();
     }
 }

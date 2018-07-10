@@ -1,8 +1,17 @@
 package amoghjapps.com.gameofgames.SearchHistoryActions;
 
 public class SearchedItemModel {
+    String id;
     String namestring;
     String imageuri;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getNamestring() {
         return namestring;
@@ -20,7 +29,8 @@ public class SearchedItemModel {
         this.imageuri = imageuri;
     }
 
-    public SearchedItemModel(String namestring, String imageuri) {
+    public SearchedItemModel(String id, String namestring, String imageuri) {
+        this.id = id;
         this.namestring = namestring;
         this.imageuri = imageuri;
     }
