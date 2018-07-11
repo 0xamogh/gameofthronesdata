@@ -5,13 +5,20 @@ import retrofit2.http.GET;
 
 public class ModelClass {
     final Data data;
+    final String message;
 
     public Data getData() {
         return data;
     }
 
-    public ModelClass(Data data) {
+    public String getMessage() {
+        return message;
+    }
+
+    public ModelClass(Data data, String message) {
+
         this.data = data;
+        this.message = message;
     }
 
     public static class Data{
