@@ -41,7 +41,9 @@ public class SearchedCharacters extends AppCompatActivity {
 
         Toast.makeText(getApplicationContext(),String.valueOf(ids.size()), Toast.LENGTH_LONG).show();
 
-
+        datab=new DatabaseHandler(getApplicationContext());
+        final List<SearchedItemModel> list=datab.getAllCharacters();
+        initializeRecycler( list,false);
         searchView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -55,11 +57,10 @@ public class SearchedCharacters extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                filter(s.toString());
+                filter(s.toString(),list);
             }
         });
-        datab=new DatabaseHandler(getApplicationContext());
-        initializeRecycler( datab.getAllCharacters(),false);
+
 
 
 
@@ -99,9 +100,9 @@ public class SearchedCharacters extends AppCompatActivity {
         });
 
     }
-    private void filter(String s){
-        ArrayList<SearchedItemModel> arrayList=new ArrayList<>();
-        for( SearchedItemModel item: array){
+    private void filter(String s,List<SearchedItemModel> arrayList){
+
+        for( SearchedItemModel item: arrayList){
 
             if(item.namestring.toLowerCase().toString().contains(s.toLowerCase())){
                 arrayList.add(item);
