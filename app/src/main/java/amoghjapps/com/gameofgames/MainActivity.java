@@ -23,6 +23,7 @@ import android.widget.SearchView;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -61,61 +62,63 @@ public class MainActivity extends AppCompatActivity {
     private ObjectOutputStream objectOut;
     private Object outputObject;
     private String filePath;
-
+    public DatabaseHandler db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar);
+        mCollapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         mCollapsingToolbarLayout.setTitle("Name");
-        recyclerView=findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recycler_view);
         recyclerView.hasFixedSize();
-        LinearLayoutManager llm=new LinearLayoutManager(this);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
-        button=findViewById(R.id.button);
+        button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this, SearchedCharacters.class);
+                Intent intent = new Intent(MainActivity.this, SearchedCharacters.class);
                 startActivity(intent);
             }
         });
 
-        searchView=findViewById(R.id.seachView);
-        imageView=findViewById(R.id.imageView);
+        searchView = findViewById(R.id.seachView);
+        imageView = findViewById(R.id.imageView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-                RetrofitAdapter.GOTInterface gotInterface=RetrofitAdapter.getClient();
-                Call<ModelClass> call=gotInterface.getChracterInfo(query);
+                RetrofitAdapter.GOTInterface gotInterface = RetrofitAdapter.getClient();
+                Call<ModelClass> call = gotInterface.getChracterInfo(query);
                 call.enqueue(new Callback<ModelClass>() {
                     @Override
                     public void onResponse(Call<ModelClass> call, Response<ModelClass> response) {
                         //creating data model
-                        ArrayList<Character> characterData= setCharacterAttributes(response.body().getData());
+                        ArrayList<Character> characterData = setCharacterAttributes(response.body().getData());
                         //initialize recycler view;
                         initializeRecycler(characterData);
-                        saveJSONasText(response.body().getData());
+                       /* saveJSONasText(response.body().getData());*/
 
-                        Log.d("status","Success");
+                        Log.d("status", "Success");
 
                     }
 
                     @Override
                     public void onFailure(Call<ModelClass> call, Throwable t) {
-                        Log.d("status","Failure");
+                        Log.d("status", "Failure");
                     }
                 });
                 return false;
 
-            };
+            }
+
+            ;
 
 
             @Override
@@ -124,22 +127,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
     public ArrayList<Character> setCharacterAttributes(ModelClass.Data character){
+        db=new DatabaseHandler(getApplicationContext());
+        db.addCharacter(character);
 
         Picasso.get().load(urlManager.imageBase+character.getImageLink()).into(imageView);
         ArrayList<Character> data=new ArrayList<>();
 
         ids.add(character.get_id());
+
+       /* Bitmap bit= getBitmapFromURL(urlManager.imageBase+character.getImageLink());
+        ByteArrayOutputStream byte1=new ByteArrayOutputStream();
+        bit.compress(Bitmap.CompressFormat.JPEG,100,byte1);
+        byte imageinbyte[]=byte1.toByteArray();*/
+
 
         mCollapsingToolbarLayout.setTitle(character.getName());
         if(character.isMale()==true){
@@ -174,6 +176,8 @@ public class MainActivity extends AppCompatActivity {
         //8
         if(character.getHouse()!=null)
             data.add(new Character("House:",character.getHouse()));
+        db.addCharacter(character);
+
         return data;
 
 
@@ -186,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
     }
-    public void saveJSONasText(ModelClass.Data data){
+   /* public void saveJSONasText(ModelClass.Data data){
         String jsonfile=data.toString();
         FileOutputStream fos=null;
         try {
@@ -208,9 +212,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-    }
+    }*/
 
-    public Bitmap getBitmapFromURL(String src) {
+   /* public Bitmap getBitmapFromURL(String src) {
         try {
             java.net.URL url = new java.net.URL(src);
             HttpURLConnection connection = (HttpURLConnection) url
@@ -224,8 +228,8 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             return null;
         }
-    }
-    public void writeObject(Object inputObject, String fileName){
+    }*/
+   /* public void writeObject(Object inputObject, String fileName){
         try {
             filePath = parent.getApplicationContext().getFilesDir().getAbsolutePath() + "/" + fileName;
             fileOut = new FileOutputStream(filePath);
@@ -243,5 +247,5 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-    }
+    }*/
 }

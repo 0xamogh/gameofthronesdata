@@ -20,22 +20,35 @@ import amoghjapps.com.gameofgames.R;
 public class SearchedRecyclerAdapter extends RecyclerView.Adapter<SearchedRecyclerAdapter.SearchedMyViewHolder> {
 
      //random color generator
-    ColorGenerator generator = ColorGenerator.MATERIAL;
     public List<SearchedItemModel> listattributes;
-    public class SearchedMyViewHolder extends RecyclerView.ViewHolder{
+    private OnItemClickListener listener;
+    public interface OnItemClickListener{
+        void onItemClick(int position);
+    }
+    public void setOnItemClickListener(OnItemClickListener listener){
+         this.listener=listener;
+    }
+    public static class SearchedMyViewHolder extends RecyclerView.ViewHolder{
         public TextView name;
         public ImageView image;
-        public SearchedMyViewHolder(View v){
+        public SearchedMyViewHolder(View v, final OnItemClickListener listener1){
             super(v);
             name=v.findViewById(R.id.gmailitem_title);
             image=v.findViewById(R.id.gmailitem_letter);
-
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(listener1!=null){
+                        int position=getAdapterPosition();
+                        if(position!=RecyclerView.NO_POSITION){
+                            listener1.onItemClick(position);
+                        }
+                    }
 
                 }
             });
+
+
 
         }
     }
@@ -49,22 +62,15 @@ public class SearchedRecyclerAdapter extends RecyclerView.Adapter<SearchedRecycl
     public SearchedMyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
       View iitemView= LayoutInflater.from(parent.getContext())
               .inflate(R.layout.searchedcharactersitemview,parent,false);
-        return new SearchedMyViewHolder(iitemView);
+        return new SearchedMyViewHolder(iitemView,listener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull SearchedMyViewHolder holder, int position) {
-        SearchedItemModel item=listattributes.get(position);
+        SearchedItemModel item = listattributes.get(position);
         //to be completed
         holder.name.setText(item.getNamestring());
-        if(item.getImageuri()==null){
-            String letter=String.valueOf(item.getNamestring().charAt(0));
-            TextDrawable drawable = TextDrawable.builder()
-                    .buildRound(letter, generator.getRandomColor());
-            holder.image.setImageDrawable(drawable);
-        }else{
-        holder.image.setImageDrawable(Drawable.createFromPath(item.getImageuri()));
-    }}
+    }
 
     @Override
     public int getItemCount() {

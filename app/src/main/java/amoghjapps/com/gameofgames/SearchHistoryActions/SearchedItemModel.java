@@ -1,5 +1,8 @@
 package amoghjapps.com.gameofgames.SearchHistoryActions;
 
+import amoghjapps.com.gameofgames.DatabaseHandler;
+import amoghjapps.com.gameofgames.Model.ModelClass;
+
 public class SearchedItemModel {
     String id;
     String namestring;
@@ -34,4 +37,5 @@ public class SearchedItemModel {
         this.namestring = namestring;
         this.imageuri = imageuri;
     }
+
 }

@@ -26,4 +26,5 @@ public class Character {
         this.attribute = attribute;
         this.attribute_value = attribute_value;
     }
+
 }

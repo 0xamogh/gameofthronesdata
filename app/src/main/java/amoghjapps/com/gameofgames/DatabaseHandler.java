@@ -6,7 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import amoghjapps.com.gameofgames.Model.ModelClass;
+import amoghjapps.com.gameofgames.SearchHistoryActions.SearchedItemModel;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -50,7 +54,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    void addCharacter(ModelClass.Data character){
+    public void addCharacter(ModelClass.Data character){
         SQLiteDatabase db=this.getWritableDatabase();
 
         ContentValues values=new ContentValues();
@@ -71,12 +75,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     }
-    ModelClass.Data getData(int id){
+    public ModelClass.Data getData(String name){
         SQLiteDatabase db=this.getReadableDatabase();
         Cursor cursor=db.query(TABLE_CHARACTERS,new String[]{
                 KEY_ID,KEY_NAME,KEY_GENDER,KEY_IMAGELINK,KEY_CULTURE,
-                KEY_DOB,KEY_DOD,KEY_MOM,KEY_DAD,KEY_HEIR,KEY_HOUSE},KEY_ID+"=?",
-                new String[]{String.valueOf(id)},null,null,null,null);
+                KEY_DOB,KEY_DOD,KEY_MOM,KEY_DAD,KEY_HEIR,KEY_HOUSE},KEY_NAME+"=?",
+                new String[]{name},null,null,null,null);
         if(cursor!=null)
             cursor.moveToFirst();
         ModelClass.Data data=new ModelClass.Data(cursor.getString(0),
@@ -102,6 +106,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         // return count
         return cursor.getCount();
+    }
+
+    public List<SearchedItemModel> getAllCharacters(){
+        List<SearchedItemModel> list=new ArrayList<SearchedItemModel>();
+        String selectQuery="SELECT *FROM "+TABLE_CHARACTERS;
+        SQLiteDatabase db=this.getReadableDatabase();
+        Cursor cursor=db.rawQuery(selectQuery,null);
+        if(cursor.moveToFirst()){
+            do {
+                SearchedItemModel data=new SearchedItemModel(cursor.getString(0),
+                        cursor.getString(1),cursor.getString(3));
+                list.add(data);
+            }while(cursor.moveToNext());
+        }
+        return list;
     }
 
 }

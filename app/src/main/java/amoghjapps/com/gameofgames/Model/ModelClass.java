@@ -4,7 +4,12 @@ package amoghjapps.com.gameofgames.Model;
 import retrofit2.http.GET;
 
 public class ModelClass {
-    final Data data;
+     Data data;
+
+    public void setData(Data data) {
+        this.data = data;
+    }
+
     final String message;
 
     public Data getData() {
@@ -22,19 +27,68 @@ public class ModelClass {
     }
 
     public static class Data{
-        final String _id;
-        final String name;
-        final boolean male;
-        final String imageLink;
-        final String title;
-        final String culture;
-        final int dateOfBirth;
-        final int dateOfDeath;
-        final String mother;
-        final String father;
-        final String heir;
-        final String house;
+         String _id;
+        String name;
+        boolean male;
+        String imageLink;
+        String title;
+        String culture;
+        int dateOfBirth;
+        int dateOfDeath;
+        String mother;
+        String father;
+        String heir;
+        String house;
 
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setMale(boolean male) {
+            this.male = male;
+        }
+
+        public void setImageLink(String imageLink) {
+            this.imageLink = imageLink;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public void setCulture(String culture) {
+            this.culture = culture;
+        }
+
+        public void setDateOfBirth(int dateOfBirth) {
+            this.dateOfBirth = dateOfBirth;
+        }
+
+        public void setDateOfDeath(int dateOfDeath) {
+            this.dateOfDeath = dateOfDeath;
+        }
+
+        public void setMother(String mother) {
+            this.mother = mother;
+        }
+
+        public void setFather(String father) {
+            this.father = father;
+        }
+
+        public void setHeir(String heir) {
+            this.heir = heir;
+        }
+
+        public void setHouse(String house) {
+            this.house = house;
+        }
+
+
+
+        public void set_id(String _id){
+          _id=this._id;
+        }
         public String get_id() {
             return _id;
         }

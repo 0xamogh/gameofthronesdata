@@ -1,41 +1,26 @@
 package amoghjapps.com.gameofgames.SearchHistoryActions;
 
-import android.graphics.ColorSpace;
-import android.os.SystemClock;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.JsonReader;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
-import amoghjapps.com.gameofgames.Model.ModelClass;
+import amoghjapps.com.gameofgames.DatabaseHandler;
+import amoghjapps.com.gameofgames.LocalDisplayActivity;
 import amoghjapps.com.gameofgames.R;
 import amoghjapps.com.gameofgames.RecyclerView.Character;
-import retrofit2.Call;
 
 import static amoghjapps.com.gameofgames.MainActivity.ids;
 
@@ -46,19 +31,16 @@ public class SearchedCharacters extends AppCompatActivity {
     public SearchedRecyclerAdapter adapt;
     private static final Type REVIEW_TYPE = new TypeToken<Character>() {
     }.getType();
+    public DatabaseHandler datab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_searched_characters);
-        recyclerView=findViewById(R.id.recyclerView);
+        recyclerView=findViewById(R.id.recycler_view);
         searchView=findViewById(R.id.searchView);
 
         Toast.makeText(getApplicationContext(),String.valueOf(ids.size()), Toast.LENGTH_LONG).show();
-       try {
-           loadandparse(ids.get(0));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
         searchView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -76,8 +58,8 @@ public class SearchedCharacters extends AppCompatActivity {
                 filter(s.toString());
             }
         });
-
-          array=new ArrayList<>();
+        datab=new DatabaseHandler(getApplicationContext());
+        initializeRecycler( datab.getAllCharacters(),false);
 
 
 
@@ -85,7 +67,8 @@ public class SearchedCharacters extends AppCompatActivity {
 
 
     }
-    public void loadandparse(String name) throws IOException {
+
+    /*public void loadandparse(String name) throws IOException {
         Gson gson=new GsonBuilder().setPrettyPrinting().create();
         String path=getFilesDir()+"/"+name+".json";
         BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
@@ -93,9 +76,9 @@ public class SearchedCharacters extends AppCompatActivity {
         array.add(new SearchedItemModel(character.getData().get_id(),character.getData().getName(),character.getData().getImageLink()));
         initializeRecycler(array,false);
 
-    }
+    }*/
 
-    public void initializeRecycler(ArrayList<SearchedItemModel> array,boolean filter){
+    public void initializeRecycler(final List<SearchedItemModel> array, boolean filter){
 
             adapt = new SearchedRecyclerAdapter(array);
 
@@ -103,6 +86,17 @@ public class SearchedCharacters extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapt);
+
+        adapt.setOnItemClickListener(new SearchedRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                SearchedItemModel item=array.get(position);
+                String name=item.namestring;
+                Intent intent=new Intent(SearchedCharacters.this, LocalDisplayActivity.class);
+                intent.putExtra("id",name);
+                startActivity(intent);
+            }
+        });
 
     }
     private void filter(String s){
